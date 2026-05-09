@@ -6,7 +6,10 @@ import { Loader } from "../../Dashboards/Common/Loader";
 
 function Suggestions() {
   const getSuggestions = async () => {
-    const hostel = JSON.parse(localStorage.getItem("hostel"));
+    const hostel = JSON.parse(localStorage.getItem("hostel")) || {};
+    if (!hostel._id) {
+      return;
+    }
     const response = await fetch("http://localhost:3000/api/suggestion/hostel", {
       method: "POST",
       headers: {

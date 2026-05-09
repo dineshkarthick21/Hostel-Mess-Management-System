@@ -6,15 +6,34 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function RegisterStudent() {
+  const hostelData = JSON.parse(localStorage.getItem("hostel")) || {};
+  const hostelId = hostelData._id || "";
+  const hostelName = hostelData.name || "No Hostel Assigned";
+
   const registerStudent = async (e) => {
     e.preventDefault();
+    
+    if (!hostelId) {
+      toast.error("Hostel is not set for this admin. Logging out to re-assign hostel...", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+      });
+      setTimeout(() => {
+        localStorage.clear();
+        window.location.href = "/auth/admin-login";
+      }, 2000);
+      return;
+    }
     try {
       setLoading(true);
       let student = {
         name: name,
-        cms_id: cms,
-        room_no: room_no,
-        batch: batch,
+        cms_id: parseInt(cms),
+        room_no: parseInt(room_no),
+        batch: parseInt(batch),
         dept: dept,
         course: course,
         email: email,
@@ -23,7 +42,7 @@ function RegisterStudent() {
         address: address,
         dob: dob,
         cnic: cnic,
-        hostel: hostel,
+        hostel: hostelId,
         password: password
       };
       const res = await fetch("http://localhost:3000/api/student/register-student", {
@@ -90,20 +109,20 @@ function RegisterStudent() {
     }
   };
 
-  const hostel = JSON.parse(localStorage.getItem("hostel")).name;
-  const [cms, setCms] = useState();
-  const [name, setName] = useState();
-  const [room_no, setRoomNo] = useState();
-  const [batch, setBatch] = useState();
-  const [dept, setDept] = useState();
-  const [course, setCourse] = useState();
-  const [email, setEmail] = useState();
-  const [fatherName, setFatherName] = useState();
-  const [contact, setContact] = useState();
-  const [address, setAddress] = useState();
-  const [dob, setDob] = useState();
-  const [cnic, setCnic] = useState();
-  const [password, setPassword] = useState();
+  const hostel = (JSON.parse(localStorage.getItem("hostel")) || {}).name || "";
+  const [cms, setCms] = useState("");
+  const [name, setName] = useState("");
+  const [room_no, setRoomNo] = useState("");
+  const [batch, setBatch] = useState("");
+  const [dept, setDept] = useState("");
+  const [course, setCourse] = useState("");
+  const [email, setEmail] = useState("");
+  const [fatherName, setFatherName] = useState("");
+  const [contact, setContact] = useState("");
+  const [address, setAddress] = useState("");
+  const [dob, setDob] = useState("");
+  const [cnic, setCnic] = useState("");
+  const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
 
@@ -215,16 +234,21 @@ function RegisterStudent() {
                 onChange: (e) => setRoomNo(e.target.value),
               }}
             />
-            <Input
-              field={{
-                name: "hostel",
-                placeholder: "Student Hostel",
-                type: "text",
-                req: true,
-                value: hostel,
-                disabled: true,
-              }}
-            />
+            <div className="flex-grow min-w-[200px]">
+              <label
+                htmlFor="hostel"
+                className="block mb-2 text-sm font-medium text-white"
+              >
+                Hostel <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="hostel"
+                value={hostelName}
+                disabled
+                className="border text-sm rounded-lg block w-full p-2.5 bg-neutral-700 border-neutral-600 placeholder-gray-400 text-yellow-400 focus:ring-blue-500 focus:border-blue-500 outline-none font-semibold"
+              />
+            </div>
             <Input
               field={{
                 name: "dept",

@@ -3,12 +3,14 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
 Sidebar.propTypes = {
-  links: PropTypes.shape({
-    text: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
-    for: PropTypes.string.isRequired,
-    svg: PropTypes.element.isRequired,
-  }).isRequired,
+  links: PropTypes.arrayOf(
+    PropTypes.shape({
+      text: PropTypes.string.isRequired,
+      url: PropTypes.string.isRequired,
+      for: PropTypes.string,
+      svg: PropTypes.element.isRequired,
+    })
+  ).isRequired,
 };
 
 function Sidebar({ links }) {

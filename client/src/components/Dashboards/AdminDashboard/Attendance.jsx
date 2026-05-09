@@ -8,12 +8,27 @@ import LoadingBar from 'react-top-loading-bar'
 function Attendance() {
   const getALL = async () => {
     setProgress(30);
+    const hostelData = JSON.parse(localStorage.getItem("hostel")) || {};
+    const hostelId = hostelData._id;
+    
+    if (!hostelId) {
+      toast.error("Hostel information not found. Please log in again.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+      });
+      setProgress(100);
+      return;
+    }
+    
     const marked = await fetch("http://localhost:3000/api/attendance/getHostelAttendance", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         },
-        body: JSON.stringify({ hostel: JSON.parse(localStorage.getItem("hostel"))._id }),
+        body: JSON.stringify({ hostel: hostelId }),
         });
     setProgress(40);
     const markedData = await marked.json();

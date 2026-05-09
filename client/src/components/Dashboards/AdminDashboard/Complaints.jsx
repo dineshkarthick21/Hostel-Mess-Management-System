@@ -5,7 +5,12 @@ import "react-toastify/dist/ReactToastify.css";
 
 function Complaints() {
   const getComplaints = async () => {
-    const hostel = JSON.parse(localStorage.getItem("hostel"))._id;
+    const hostelData = JSON.parse(localStorage.getItem("hostel")) || {};
+    const hostel = hostelData._id;
+    if (!hostel) {
+      console.warn("Hostel not found in localStorage");
+      return;
+    }
     const response = await fetch(
       `http://localhost:3000/api/complaint/hostel`,
       {

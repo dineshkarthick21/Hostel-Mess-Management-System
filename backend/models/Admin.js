@@ -12,24 +12,19 @@ const AdminSchema = new Schema({
         unique:true
     },
     father_name:{
-        type:String,
-        required:true
+        type:String
     },
     contact:{
-        type:String,
-        required:true
+        type:String
     },
     address:{
-        type:String,
-        required:true
+        type:String
     },
     dob:{
-        type:Date,
-        required:true
+        type:Date
     },
     cnic:{
         type:String,
-        required:true,
         unique:true
     },
     user:{

@@ -5,7 +5,19 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function AllStudents() {
   const getCSV = async () => {
-    const hostel = JSON.parse(localStorage.getItem('hostel'))._id;
+    const hostelData = JSON.parse(localStorage.getItem('hostel')) || {};
+    const hostel = hostelData._id;
+    
+    if (!hostel) {
+      toast.error("Hostel is not set for this admin", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+      });
+      return;
+    }
     const res = await fetch("http://localhost:3000/api/student/csv", {
       method: "POST",
       headers: {
@@ -40,7 +52,21 @@ function AllStudents() {
   };
   const getAll = async () => {
     const data = await getAllStudents();
-    setallStudents(data.students);
+    if (data.success) {
+      setallStudents(data.students || []);
+    } else {
+      toast.error(
+        data?.errors?.[0]?.msg || "Failed to fetch students",
+        {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+        }
+      );
+      setallStudents([]);
+    }
   };
 
   const [allStudents, setallStudents] = useState([]);

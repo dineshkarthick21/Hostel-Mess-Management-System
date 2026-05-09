@@ -17,7 +17,10 @@ const List = () => {
     },
   ]);
   useEffect(() => {
-    let student = JSON.parse(localStorage.getItem("student"));
+    let student = JSON.parse(localStorage.getItem("student")) || {};
+    if (!student._id) {
+      return;
+    }
     fetch("http://localhost:3000/api/invoice/student", {
       method: "POST",
       headers: {
@@ -117,10 +120,13 @@ const List = () => {
 };
 
 function Home() {
-  let student = JSON.parse(localStorage.getItem("student"));
+  let student = JSON.parse(localStorage.getItem("student")) || {};
 
   const getAttendance = async () => {
-    let student = JSON.parse(localStorage.getItem("student"));
+    let student = JSON.parse(localStorage.getItem("student")) || {};
+    if (!student._id) {
+      return;
+    }
     const res = await fetch("http://localhost:3000/api/attendance/get", {
       method: "POST",
       headers: {
@@ -154,7 +160,7 @@ function Home() {
   return (
     <div className="w-full h-screen flex items-center justify-center flex-col gap-5 max-h-screen overflow-y-auto pt-64 lg:pt-0 md:pt-64 sm:pt-96">
       <h1 className="text-white font-bold text-5xl text-center">
-        Welcome <span className="text-blue-500">{student.name}!</span>
+        Welcome <span className="text-blue-500">{student.name || "student"}!</span>
       </h1>
       <div className="flex gap-5 w-full justify-center flex-wrap">
         <List />

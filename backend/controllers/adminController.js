@@ -3,6 +3,23 @@ const {validationResult} = require('express-validator');
 const {Admin, User, Hostel} = require('../models');
 const bcrypt = require('bcryptjs');
 
+const getOrCreateDefaultHostel = async () => {
+    const defaultName = process.env.DEFAULT_HOSTEL_NAME || 'Default Hostel';
+    let hostel = await Hostel.findOne({ name: defaultName });
+
+    if (!hostel) {
+        hostel = await Hostel.create({
+            name: defaultName,
+            location: 'Default Location',
+            rooms: 0,
+            capacity: 0,
+            vacant: 0
+        });
+    }
+
+    return hostel;
+};
+
 const registerAdmin = async (req, res) => {
     try {
         let success = false;
@@ -20,7 +37,15 @@ const registerAdmin = async (req, res) => {
                 return res.status(400).json({success, errors: [{msg: 'Admin already exists'}]});
             }
 
-            let shostel = await Hostel.findOne({name: hostel});
+            let shostel = null;
+            if (hostel) {
+                shostel = await Hostel.findOne({name: hostel});
+            }
+            
+            // If no hostel specified or found, use default
+            if (!shostel) {
+                shostel = await getOrCreateDefaultHostel();
+            }
 
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(password, salt);
@@ -42,7 +67,7 @@ const registerAdmin = async (req, res) => {
                 dob,
                 cnic,
                 user: user.id,
-                hostel: shostel.id
+                hostel: shostel._id
             });
 
             await admin.save();
@@ -53,10 +78,12 @@ const registerAdmin = async (req, res) => {
             res.json({success, token, admin});
 
         } catch (error) {
-            res.status(500).send('Server error');
+            console.error('registerAdmin error:', error);
+            res.status(500).json({success, errors: [{msg: 'Server error'}]});
         }
     } catch (err) {
-        res.status(500).json({success, errors: [{msg: 'Server error'}]});
+        console.error('registerAdmin outer error:', err);
+        res.status(500).json({success: false, errors: [{msg: 'Server error'}]});
     }
 }
 
@@ -114,11 +141,27 @@ const getHostel = async (req, res) => {
             return res.status(400).json({success, errors: [{msg: 'Admin does not exists'}]});
         }
 
-        let hostel = await Hostel.findById(admin.hostel);
+        let hostel = null;
+        if (admin.hostel) {
+            hostel = await Hostel.findById(admin.hostel);
+        }
+
+        if (!hostel) {
+            try {
+                const defaultHostel = await getOrCreateDefaultHostel();
+                admin.hostel = defaultHostel._id;
+                await admin.save();
+                hostel = defaultHostel;
+            } catch (err) {
+                console.error('Error creating/assigning default hostel:', err);
+                return res.status(500).json({success, errors: [{msg: 'Failed to assign hostel'}]});
+            }
+        }
         success = true;
         res.json({success, hostel});
     } catch (error) {
-        res.status(500).send('Server error');
+        console.error('getHostel error:', error);
+        return res.status(500).json({success: false, errors: [{msg: 'Server error'}]});
     }
 }
 

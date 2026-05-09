@@ -6,7 +6,17 @@ import "react-toastify/dist/ReactToastify.css";
 function Suggestions() {
   const registerSuggestions = async (e) => {
     e.preventDefault();
-    const student = JSON.parse(localStorage.getItem("student"));
+    const student = JSON.parse(localStorage.getItem("student")) || {};
+    if (!student._id || !student.hostel) {
+      toast.error("Student profile is incomplete", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        draggable: true,
+        });
+      return;
+    }
     const response = await fetch("http://localhost:3000/api/suggestion/register", {
       method: "POST",
       headers: {

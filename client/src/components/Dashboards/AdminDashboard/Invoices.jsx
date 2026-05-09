@@ -6,14 +6,25 @@ import LoadingBar from 'react-top-loading-bar'
 function Invoices() {
   const genInvoices = async () => {
     setProgress(30)
-    let hostel = JSON.parse(localStorage.getItem("hostel"));
+    let hostelData = JSON.parse(localStorage.getItem("hostel")) || {};
+    if (!hostelData._id) {
+      toast.error("Hostel information not found", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+      });
+      setProgress(100);
+      return;
+    }
     try {
       const res = await fetch("http://localhost:3000/api/invoice/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ hostel: hostel._id })
+        body: JSON.stringify({ hostel: hostelData._id })
       });
       setProgress(60)
       const data = await res.json();
@@ -117,14 +128,25 @@ function Invoices() {
 
   const getInvoices = async () => {
     setProgress(30);
-    let hostel = JSON.parse(localStorage.getItem("hostel"));
+    let hostelData = JSON.parse(localStorage.getItem("hostel")) || {};
+    if (!hostelData._id) {
+      toast.error("Hostel information not found", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+      });
+      setProgress(100);
+      return;
+    }
     try {
       const res = await fetch("http://localhost:3000/api/invoice/getbyid", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ hostel: hostel._id })
+        body: JSON.stringify({ hostel: hostelData._id }),
       });
       setProgress(60);
       const data = await res.json();

@@ -6,6 +6,8 @@ import LandingSite from "./components/LandingSite/Index";
 import LandingPage from "./components/LandingSite/LandingPage/index"
 import Auth from "./components/LandingSite/AuthPage/Index";
 import SignIn from "./components/LandingSite/AuthPage/SignIn";
+import StudentSignUp from "./components/LandingSite/AuthPage/StudentSignUp";
+import AdminSignUp from "./components/LandingSite/AuthPage/AdminSignUp";
 import RequestAcc from "./components/LandingSite/AuthPage/Request";
 import AdminSignIn from "./components/LandingSite/AuthPage/AdminSignIn";
 import Index from "./components/Dashboards/StudentDashboard/Index";
@@ -38,8 +40,10 @@ function App() {
           <Route path="auth" element={<Auth />}>
             <Route index element={<SignIn />} />
             <Route path="login" element={<SignIn />} />
+            <Route path="signup" element={<StudentSignUp />} />
             <Route path="request" element={<RequestAcc />} />
             <Route path="admin-login" element={<AdminSignIn />} />
+            <Route path="admin-signup" element={<AdminSignUp />} />
           </Route>
         </Route>
         <Route path="/student-dashboard" element={<Index />}>

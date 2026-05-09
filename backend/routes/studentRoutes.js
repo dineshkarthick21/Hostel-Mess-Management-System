@@ -9,17 +9,17 @@ const { registerStudent, getStudent, getAllStudents, updateStudent, deleteStuden
 // @access Public
 router.post('/register-student', [
     check('name', 'Name is required').not().isEmpty(),
-    check('cms_id', 'CMS ID of at least 6 digit is required').isLength(6),
-    check('room_no', 'Room number is required').isLength(1),
+    check('cms_id', 'CMS ID should be 5-10 characters').isLength({ min: 5, max: 10 }),
+    check('room_no', 'Room number should be 1-4 characters').isLength({ min: 1, max: 4 }),
     check('batch', 'Batch is required').not().isEmpty(),
     check('dept', 'Department is required').not().isEmpty(),
     check('course', 'Course is required').not().isEmpty(),
     check('email', 'Please include a valid email').isEmail(),
     check('father_name', 'Father name is required').not().isEmpty(),
-    check('contact', 'Enter a valid contact number').isLength(11),
+    check('contact', 'Contact should be 10-15 characters').isLength({ min: 10, max: 15 }),
     check('address', 'Address is required').not().isEmpty(),
     check('dob', 'Date of birth is required').not().isEmpty(),
-    check('cnic', 'Enter valid CNIC').isLength(13),
+    check('cnic', 'CNIC should be 10-15 characters').isLength({ min: 10, max: 15 }),
     check('hostel', 'Hostel is required').not().isEmpty(),
     check('password', 'Please enter a password with 8 or more characters').isLength({ min: 8 }),
 ], registerStudent);
@@ -34,10 +34,7 @@ router.post('/get-student', [
 
 // @route  POST api/student/get-all-students
 // @access Public
-router.post('/get-all-students',[
-    check('hostel', 'Hostel is required').not().isEmpty()
-],
- getAllStudents);
+router.post('/get-all-students', [], getAllStudents);
 
 // @route  POST api/student/update-student
 // @desc   Update student

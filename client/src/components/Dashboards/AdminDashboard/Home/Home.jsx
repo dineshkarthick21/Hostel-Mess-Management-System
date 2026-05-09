@@ -14,8 +14,8 @@ import { getAllStudents } from "../../../../utils";
 import { toast } from "react-toastify";
 
 function Home() {
-  const admin = JSON.parse(localStorage.getItem("admin"));
-  const hostel = JSON.parse(localStorage.getItem("hostel"));
+  const admin = JSON.parse(localStorage.getItem("admin")) || {};
+  const hostel = JSON.parse(localStorage.getItem("hostel")) || {};
   const [noOfStudents, setNoOfStudents] = useState(0);
   const [complaints, setComplaints] = useState([]);
   const [suggestions, setSuggestions] = useState([]);
@@ -28,13 +28,16 @@ function Home() {
   };
 
   const getComplaints = async () => {
-    const hostel = JSON.parse(localStorage.getItem("hostel"))._id;
+    const hostelId = (JSON.parse(localStorage.getItem("hostel")) || {})._id;
+    if (!hostelId) {
+      return;
+    }
     const response = await fetch(`http://localhost:3000/api/complaint/hostel`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ hostel }),
+      body: JSON.stringify({ hostel: hostelId }),
     });
 
     const data = await response.json();
@@ -51,7 +54,10 @@ function Home() {
   };
 
   const getSuggestions = async () => {
-    const hostel = JSON.parse(localStorage.getItem("hostel"));
+    const hostelData = JSON.parse(localStorage.getItem("hostel")) || {};
+    if (!hostelData._id) {
+      return;
+    }
     const response = await fetch(
       "http://localhost:3000/api/suggestion/hostel",
       {
@@ -59,7 +65,7 @@ function Home() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ hostel: hostel._id }),
+        body: JSON.stringify({ hostel: hostelData._id }),
       }
     );
 
@@ -80,13 +86,16 @@ function Home() {
   };
 
   const getRequests = async () => {
-    const hostel = JSON.parse(localStorage.getItem("hostel"));
+    const hostelData = JSON.parse(localStorage.getItem("hostel")) || {};
+    if (!hostelData._id) {
+      return;
+    }
     const res = await fetch("http://localhost:3000/api/messoff/list", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ hostel: hostel._id }),
+      body: JSON.stringify({ hostel: hostelData._id }),
     });
     const data = await res.json();
     if (data.success) {
@@ -224,7 +233,9 @@ function Home() {
       <h1 className="text-white font-bold text-5xl text-center">
         Welcome <span className="text-blue-500">{admin.name || "admin"}!</span>
       </h1>
-      <h1 className="text-white text-xl">Manager, {hostel.name || "hostel"}</h1>
+      <h1 className="text-white text-xl">
+        Manager, {hostel.name || "hostel"}
+      </h1>
       <div className="flex w-full gap-5 sm:px-20 pt-5 flex-wrap items-center justify-center">
         <ShortCard title="Total Students" number={noOfStudents} />
         <ShortCard title="Total Complaints" number={complaints.length} />

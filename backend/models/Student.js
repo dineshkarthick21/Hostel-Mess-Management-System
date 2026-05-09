@@ -8,24 +8,19 @@ const StudentSchema = new Schema({
     },
     cms_id:{
         type:Number,
-        required:true,
         unique:true
     },
     room_no:{
         type:Number,
-        required:true
     },
     batch:{
         type:Number,
-        required:true
     },
     dept:{
-        type:String,
-        required:true
+        type:String
     },
     course:{
-        type:String,
-        required:true
+        type:String
     },
     email:{
         type:String,
@@ -33,24 +28,19 @@ const StudentSchema = new Schema({
         unique:true
     },
     father_name:{
-        type:String,
-        required:true
+        type:String
     },
     contact:{
-        type:String,
-        required:true
+        type:String
     },
     address:{
-        type:String,
-        required:true
+        type:String
     },
     dob:{
-        type:Date,
-        required:true
+        type:Date
     },
     cnic:{
         type:String,
-        required:true,
         unique:true
     },
     user:{

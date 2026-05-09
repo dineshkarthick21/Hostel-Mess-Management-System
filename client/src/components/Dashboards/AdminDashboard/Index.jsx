@@ -170,7 +170,7 @@ export default function Index() {
     },
   ];
 
-  const admin = JSON.parse(localStorage.getItem("admin"));
+  const admin = JSON.parse(localStorage.getItem("admin")) || {};
 
   const [notifications, setNotifications] = useState([
     368115, 347403, 377902, 369420,
@@ -184,7 +184,7 @@ export default function Index() {
   return (
     <div className="flex">
       <Sidebar links={links} />
-      <Topbar name={admin.name} notifications={notifications} />
+      <Topbar name={admin.name || "Admin"} notifications={notifications} />
       <div className="w-full bg-stone-900 h-screen">
         <Outlet />
       </div>

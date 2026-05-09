@@ -20,9 +20,37 @@ export default function AdminSignIn() {
       });
 
       const data = await res.json();
-      localStorage.setItem("hostel", JSON.stringify(data.hostel));
+      if (data.success && data.hostel) {
+        localStorage.setItem("hostel", JSON.stringify(data.hostel));
+      } else {
+        toast.error(
+          data.errors?.[0]?.msg || "Failed to load hostel",
+          {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          }
+        );
+      }
     } catch (err) {
-      // console.log(err);
+      toast.error(
+        "Error loading hostel information",
+        {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        }
+      );
     }
   };
 
@@ -61,8 +89,44 @@ export default function AdminSignIn() {
       let adminResult = await admin.json();
       if (adminResult.success) {
         localStorage.setItem("admin", JSON.stringify(adminResult.admin));
-        await getHostel();
-        navigate("/admin-dashboard");
+        
+        // Wait for hostel to be fetched
+        try {
+          await getHostel();
+          // Check if hostel was set
+          const hostelData = JSON.parse(localStorage.getItem("hostel"));
+          if (hostelData && hostelData._id) {
+            toast.success("Login successful! Welcome " + adminResult.admin.name, {
+              position: "top-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              theme: "dark",
+            });
+            setTimeout(() => {
+              navigate("/admin-dashboard");
+            }, 1000);
+          } else {
+            toast.error("Failed to assign hostel. Please try logging in again.", {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              theme: "dark",
+            });
+          }
+        } catch (err) {
+          toast.error("Error setting up hostel information", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            theme: "dark",
+          });
+        }
       } else {
         toast.error(
           adminResult.errors[0].msg, {
@@ -176,6 +240,15 @@ export default function AdminSignIn() {
               className="font-medium hover:underline text-blue-500"
             >
               Signin Here.
+            </Link>
+          </p>
+          <p className="text-sm font-light text-gray-400">
+            Need an admin account?{" "}
+            <Link
+              to="/auth/admin-signup"
+              className="font-medium hover:underline text-blue-500"
+            >
+              Sign up.
             </Link>
           </p>
         </form>

@@ -20,7 +20,17 @@ const registerStudent = async (req, res) => {
         if (student) {
             return res.status(400).json({success, errors: [{ msg: 'Student already exists' }] });
         }
-        let shostel = await Hostel.findOne({ name: hostel });
+        
+        // Check if hostel exists by ID
+        let shostel = await Hostel.findById(hostel);
+        if (!shostel) {
+            // Try to find by name as fallback
+            shostel = await Hostel.findOne({ name: hostel });
+        }
+        
+        if (!shostel) {
+            return res.status(400).json({success, errors: [{ msg: 'Hostel not found' }] });
+        }
 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
@@ -47,7 +57,7 @@ const registerStudent = async (req, res) => {
             dob,
             cnic,
             user: user.id,
-            hostel: shostel.id
+            hostel: shostel._id
         });
         
 
@@ -56,7 +66,8 @@ const registerStudent = async (req, res) => {
         success = true;
         res.json({success, student });
     } catch (err) {
-        res.status(500).json({success, errors: 'Server error'});
+        console.error('registerStudent error:', err);
+        res.status(500).json({success, errors: [{msg: 'Server error: ' + err.message}]});
     }
 }
 
@@ -102,13 +113,21 @@ const getAllStudents = async (req, res) => {
         return res.status(400).json({success, errors: errors.array() });
     }
 
-    let { hostel } = req.body;
+    let { hostel } = req.body || {};
 
     try {
-
-        const shostel = await Hostel.findById(hostel);
-
-        const students = await Student.find({ hostel: shostel.id }).select('-password');
+        let students = [];
+        if (hostel) {
+            const shostel = await Hostel.findById(hostel);
+            if (shostel) {
+                students = await Student.find({ hostel: shostel.id }).select('-password');
+            } else {
+                // If hostel is missing or invalid, return all students as a fallback.
+                students = await Student.find().select('-password');
+            }
+        } else {
+            students = await Student.find().select('-password');
+        }
 
         success = true;
         res.json({success, students});

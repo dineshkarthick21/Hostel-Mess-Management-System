@@ -7,7 +7,11 @@ import  LoadingBar  from 'react-top-loading-bar'
 function MessOff() {
   const getRequests = async () => {
     setProgress(30);
-    const hostel = JSON.parse(localStorage.getItem("hostel"));
+    const hostel = JSON.parse(localStorage.getItem("hostel")) || {};
+    if (!hostel._id) {
+      setProgress(100);
+      return;
+    }
     const res = await fetch("http://localhost:3000/api/messoff/list", {
       method: "POST",
       headers: {

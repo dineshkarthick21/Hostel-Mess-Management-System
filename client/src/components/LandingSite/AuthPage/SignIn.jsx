@@ -147,10 +147,19 @@ export default function SignIn() {
           <p className="text-sm font-light text-gray-400">
             Don’t have an account yet?{" "}
             <Link
-              to="/auth/request"
+              to="/auth/signup"
               className="font-medium hover:underline text-blue-500"
             >
-              Request an account.
+              Sign up here.
+            </Link>
+          </p>
+          <p className="text-sm font-light text-gray-400">
+            Are you a manager?{" "}
+            <Link
+              to="/auth/admin-signup"
+              className="font-medium hover:underline text-blue-500"
+            >
+              Admin sign up.
             </Link>
           </p>
         </form>

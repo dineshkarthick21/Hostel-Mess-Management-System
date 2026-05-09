@@ -10,7 +10,21 @@ function Complaints() {
   const registerComplaint = async (e) => {
     e.preventDefault();
     setLoading(true);
-    let student = JSON.parse(localStorage.getItem("student"));
+    const student = JSON.parse(localStorage.getItem("student")) || {};
+    if (!student._id || !student.hostel) {
+      toast.error("Student profile is incomplete", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      setLoading(false);
+      return;
+    }
     const complaint = {
       student: student._id,
       hostel: student.hostel,
@@ -99,7 +113,10 @@ function Complaints() {
 
   
   useEffect(()=> {
-    const student = JSON.parse(localStorage.getItem("student"));
+    const student = JSON.parse(localStorage.getItem("student")) || {};
+    if (!student._id) {
+      return;
+    }
     const cmpln = { student: student._id };
     const fetchComplaints = async () => {
       const res = await fetch("http://localhost:3000/api/complaint/student", {
