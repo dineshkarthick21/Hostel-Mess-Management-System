@@ -26,6 +26,7 @@ A comprehensive MERN stack application designed for efficient hostel and mess ma
 - [x] Landing Page with Hostel Information
 - [x] About Page with Hostel Details
 - [x] Contact Form (Email Integration)
+- [x] AI Assistant (Gemini API Integration)
 - [x] Authentication (Admin & Student)
 
 ## Prerequisites
@@ -39,7 +40,7 @@ A comprehensive MERN stack application designed for efficient hostel and mess ma
 ### 1. Clone Repository
 ```sh
 git clone https://github.com/dineshkarthick21/Hostel-Mess-Management-System.git
-cd Hostel-MERN
+cd Hostel-Mess-Management-System
 ```
 
 ### 2. Install Dependencies
@@ -72,13 +73,25 @@ MONGO_URI="mongodb://127.0.0.1:27017/hostel"
 JWT_SECRET="Anappleadaykeepsthedoctoraway"
 ```
 
+Create a `.env` file in the `client` folder:
+```
+VITE_GEMINI_API_KEY="YOUR_GEMINI_API_KEY"
+```
+
 ### 2. Database Setup
 - Create a MongoDB database named `hostel`
-- Import sample data from `mongoCollections/` folder:
+- Import sample data from `mongoCollections/` folder or use initialization scripts:
   - Import `hostel.users.json` as `users` collection
   - Import `hostel.students.json` as `students` collection
   - Import `hostel.hostels.json` as `hostels` collection
   - Import other JSON files for remaining collections
+
+#### Using Initialization Scripts
+You can use the provided scripts in `backend/scripts/` to set up initial data:
+```sh
+cd backend
+node scripts/createDefaultAdmin.js
+```
 
 ### 3. EmailJS Setup (Contact Form)
 1. Go to [EmailJS Dashboard](https://dashboard.emailjs.com/)
@@ -92,6 +105,11 @@ JWT_SECRET="Anappleadaykeepsthedoctoraway"
    ```javascript
    emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {...}, 'YOUR_PUBLIC_KEY')
    ```
+
+### 4. AI Assistant Setup (Gemini API)
+1. Get a free API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Add the key to `client/.env` as `VITE_GEMINI_API_KEY`
+3. The chatbot is accessible at `/ai-assistant` and integrated into the landing site navigation.
 
 ## Running the Application
 
@@ -132,17 +150,18 @@ npm run dev
 ## Project Structure
 
 ```
-Hostel-MERN/
+Hostel-Mess-Management-System/
 ├── backend/
 │   ├── controllers/       # Business logic
 │   ├── models/           # Database schemas
 │   ├── routes/           # API endpoints
+│   ├── scripts/          # DB Init & Debug scripts
 │   ├── utils/            # Helper functions
 │   ├── constants/        # Constants
 │   └── index.js          # Server entry point
 ├── client/
 │   ├── src/
-│   │   ├── components/   # React components
+│   │   ├── components/   # React components (Admin, Student, LandingSite)
 │   │   ├── assets/       # Images & static files
 │   │   ├── utils/        # Utility functions
 │   │   └── main.jsx      # Entry point
@@ -187,6 +206,7 @@ Hostel-MERN/
 - Tailwind CSS
 - Recharts (for analytics)
 - EmailJS (for emails)
+- Google Gemini API (AI Assistant)
 
 ### Backend
 - Node.js
