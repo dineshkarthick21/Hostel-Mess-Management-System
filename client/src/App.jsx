@@ -5,14 +5,15 @@ import Contact from "./components/LandingSite/Contact/index";
 import LandingSite from "./components/LandingSite/Index";
 import LandingPage from "./components/LandingSite/LandingPage/index"
 import Auth from "./components/LandingSite/AuthPage/Index";
+import AIAssistant from "./components/LandingSite/AIAssistant/Index";
 import SignIn from "./components/LandingSite/AuthPage/SignIn";
 import StudentSignUp from "./components/LandingSite/AuthPage/StudentSignUp";
 import AdminSignUp from "./components/LandingSite/AuthPage/AdminSignUp";
-import RequestAcc from "./components/LandingSite/AuthPage/Request";
 import AdminSignIn from "./components/LandingSite/AuthPage/AdminSignIn";
 import Index from "./components/Dashboards/StudentDashboard/Index";
 import Home from "./components/Dashboards/StudentDashboard/Home";
 import Mess from "./components/Dashboards/StudentDashboard/Mess";
+import FoodMenu from "./components/Dashboards/StudentDashboard/FoodMenu";
 import Attendance from "./components/Dashboards/StudentDashboard/Attendance";
 import Invoices from "./components/Dashboards/StudentDashboard/Invoices";
 import Suggestions from "./components/Dashboards/StudentDashboard/Suggestions";
@@ -37,11 +38,11 @@ function App() {
           <Route index element={<LandingPage />} />
           <Route path="about" element={<About />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="ai-assistant" element={<AIAssistant />} />
           <Route path="auth" element={<Auth />}>
             <Route index element={<SignIn />} />
             <Route path="login" element={<SignIn />} />
             <Route path="signup" element={<StudentSignUp />} />
-            <Route path="request" element={<RequestAcc />} />
             <Route path="admin-login" element={<AdminSignIn />} />
             <Route path="admin-signup" element={<AdminSignUp />} />
           </Route>
@@ -49,6 +50,7 @@ function App() {
         <Route path="/student-dashboard" element={<Index />}>
           <Route index element={<Home />} />
           <Route path="mess" element={<Mess />  } />
+          <Route path="food-menu" element={<FoodMenu />} />
           <Route path="attendance" element={<Attendance/>} />
           <Route path="complaints" element={<Complaints/>} />
           <Route path="suggestions" element={<Suggestions/>} />

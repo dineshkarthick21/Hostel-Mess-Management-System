@@ -36,7 +36,7 @@ router.post('/update-admin', [
 // @access Public
 router.post('/get-admin', [
     check('isAdmin', 'isAdmin is required').notEmpty(),
-    check('token', 'Token is required').notEmpty(),
+    check('email', 'Email is required').notEmpty(),
 ], getAdmin);
 
 // @route  POST api/admin/get-hostel

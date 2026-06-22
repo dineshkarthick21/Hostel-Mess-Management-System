@@ -1,4 +1,3 @@
-const { generateToken, verifyToken } = require('../utils/auth');
 const { validationResult } = require('express-validator');
 const { Student, Hostel, User } = require('../models');
 const bcrypt = require('bcryptjs');
@@ -20,9 +19,26 @@ const registerStudent = async (req, res) => {
         if (student) {
             return res.status(400).json({success, errors: [{ msg: 'Student already exists' }] });
         }
+
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({success, errors: [{ msg: 'User already exists with this email' }] });
+        }
+
+        const existingStudent = await Student.findOne({ email });
+        if (existingStudent) {
+            return res.status(400).json({success, errors: [{ msg: 'Student already exists with this email' }] });
+        }
         
         // Check if hostel exists by ID
-        let shostel = await Hostel.findById(hostel);
+        let shostel;
+        try {
+            shostel = await Hostel.findById(hostel);
+        } catch (e) {
+            // If ID casting fails, try finding by name
+            shostel = null;
+        }
+        
         if (!shostel) {
             // Try to find by name as fallback
             shostel = await Hostel.findOne({ name: hostel });
@@ -67,6 +83,9 @@ const registerStudent = async (req, res) => {
         res.json({success, student });
     } catch (err) {
         console.error('registerStudent error:', err);
+        if (err && err.code === 11000) {
+            return res.status(400).json({success, errors: [{msg: 'Duplicate value. Email or CMS ID already exists.'}]});
+        }
         res.status(500).json({success, errors: [{msg: 'Server error: ' + err.message}]});
     }
 }
@@ -81,17 +100,13 @@ const getStudent = async (req, res) => {
             return res.status(400).json({success, errors: errors.array() });
         }
 
-        const { isAdmin } = req.body;
+        const { isAdmin, email } = req.body;
 
         if (isAdmin) {
             return res.status(400).json({success, errors:  'Admin cannot access this route' });
         }
 
-        const { token } = req.body;
-        
-        const decoded = verifyToken(token);
-
-        const student = await Student.findOne({user: decoded.userId}).select('-password');
+        const student = await Student.findOne({email}).select('-password');
         
         if (!student) {
             return res.status(400).json({success, errors: 'Student does not exist' });

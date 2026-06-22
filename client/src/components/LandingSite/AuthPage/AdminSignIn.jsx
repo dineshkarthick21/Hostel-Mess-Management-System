@@ -74,15 +74,14 @@ export default function AdminSignIn() {
 
 
     if (result.success) {
-      localStorage.setItem("token", result.data.token);
       let admin = await fetch("http://localhost:3000/api/admin/get-admin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          isAdmin: result.data.user.isAdmin,
-          token: result.data.token
+          email: inputEmail,
+          isAdmin: result.data.user.isAdmin
         })
       });
 

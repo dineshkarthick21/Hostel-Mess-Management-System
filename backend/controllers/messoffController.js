@@ -1,6 +1,5 @@
 const { validationResult } = require('express-validator');
 const { MessOff, Student } = require('../models/');
-const { verifyToken } = require('../utils/auth');
 
 // @route   request api/messoff/request
 // @desc    Request for mess off

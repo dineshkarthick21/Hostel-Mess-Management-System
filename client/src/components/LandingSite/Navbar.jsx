@@ -7,8 +7,8 @@ function Navbar() {
   const mobileMenuStyles = `flex-col absolute top-0 left-0 w-full h-full bg-gray px-10 bg-black py-40 text-5xl font-bold`;
 
   return (
-    <nav className="flex align-center justify-between p-10 text-white md:px-20">
-      <Link to="/" className="flex z-10 md:py-3 font-bold text-xl lg:text-4xl">
+    <nav className="flex align-center justify-between py-4 px-10 text-white md:px-20">
+      <Link to="/" className="flex z-10 md:py-2 font-bold text-xl lg:text-4xl">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -43,10 +43,10 @@ function Navbar() {
           Contact
         </Link>
         <Link
-          to="/auth/request"
-          className="md:py-3 md:hover:text-blue-500 transition-all ease-linear"
+          to="/ai-assistant"
+          className="md:py-3 md:hover:text-emerald-400 transition-all ease-linear"
         >
-          Request
+          AI Assistant
         </Link>
         <Link
           to="/auth/admin-login"

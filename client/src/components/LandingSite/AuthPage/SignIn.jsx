@@ -9,7 +9,7 @@ import { Loader } from "../../Dashboards/Common/Loader";
 export default function SignIn() {
   let navigate = useNavigate();
 
-  if (localStorage.getItem("token")) {
+  if (localStorage.getItem("student") || localStorage.getItem("admin")) {
     verifysession();
   }
 
@@ -32,15 +32,15 @@ export default function SignIn() {
     let result = await response.json();
 
     if (result.success) {
-      localStorage.setItem("token", result.data.token);
       let student = await fetch("http://localhost:3000/api/student/get-student", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          isAdmin: result.data.user.isAdmin,
-          token: result.data.token})
+          email: email,
+          isAdmin: result.data.user.isAdmin
+        })
       });
 
       let studentResult = await student.json();
@@ -94,10 +94,10 @@ export default function SignIn() {
   };
 
   return (
-    <div className="w-full rounded-lg md:mt-0 sm:max-w-md xl:p-0 bg-gray-800 border-gray-700">
+    <div className="w-full rounded-lg md:mt-0 sm:max-w-md xl:p-0 bg-slate-800 border-emerald-600 border-2">
       <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-        <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-white">
-          Sign in to your account
+        <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-emerald-400">
+          Sign in to your account - Student
         </h1>
         <form className="space-y-4 md:space-y-6" onSubmit={login}>
           <Input field={iemail} />
@@ -109,12 +109,12 @@ export default function SignIn() {
                   id="remember"
                   aria-describedby="remember"
                   type="checkbox"
-                  className="w-4 h-4 border rounded focus:ring-3 bg-gray-700 border-gray-600 focus:ring-blue-600 ring-offset-gray-800"
+                  className="w-4 h-4 border rounded focus:ring-3 bg-slate-700 border-emerald-500 focus:ring-emerald-500 ring-offset-slate-800"
                   required=""
                 />
               </div>
               <div className="ml-3 text-sm">
-                <label htmlFor="remember" className="text-gray-300">
+                <label htmlFor="remember" className="text-emerald-100">
                   Remember me
                 </label>
               </div>
@@ -122,7 +122,7 @@ export default function SignIn() {
           </div>
           <button
             type="submit"
-            className="w-full text-white focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-blue-600 hover:bg-blue-700 focus:ring-blue-800"
+            className="w-full text-white focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-emerald-600 hover:bg-emerald-700 focus:ring-emerald-800"
           >
             {loader ? (
               <>
@@ -144,20 +144,20 @@ export default function SignIn() {
             pauseOnHover
             theme="dark"
           />
-          <p className="text-sm font-light text-gray-400">
-            Don’t have an account yet?{" "}
+          <p className="text-sm font-light text-slate-300">
+            Don't have an account yet?{" "}
             <Link
               to="/auth/signup"
-              className="font-medium hover:underline text-blue-500"
+              className="font-medium hover:underline text-emerald-400"
             >
               Sign up here.
             </Link>
           </p>
-          <p className="text-sm font-light text-gray-400">
+          <p className="text-sm font-light text-slate-300">
             Are you a manager?{" "}
             <Link
               to="/auth/admin-signup"
-              className="font-medium hover:underline text-blue-500"
+              className="font-medium hover:underline text-emerald-400"
             >
               Admin sign up.
             </Link>

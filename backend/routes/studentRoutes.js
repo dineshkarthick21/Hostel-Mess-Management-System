@@ -25,11 +25,11 @@ router.post('/register-student', [
 ], registerStudent);
 
 // @route  POST api/student/get-student
-// @desc   Get student by CMS ID
+// @desc   Get student by email
 // @access Public
 router.post('/get-student', [
     check('isAdmin', 'isAdmin is required').notEmpty(),
-    check('token', 'You donot have a valid token').notEmpty()
+    check('email', 'Email is required').notEmpty()
 ], getStudent);
 
 // @route  POST api/student/get-all-students

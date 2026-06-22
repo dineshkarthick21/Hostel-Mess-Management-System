@@ -1,4 +1,3 @@
-const {generateToken, verifyToken} = require('../utils/auth');
 const {validationResult} = require('express-validator');
 const {Admin, User, Hostel} = require('../models');
 const bcrypt = require('bcryptjs');
@@ -72,10 +71,8 @@ const registerAdmin = async (req, res) => {
 
             await admin.save();
 
-            const token = generateToken(user.id, user.isAdmin);
-
             success = true;
-            res.json({success, token, admin});
+            res.json({success, admin});
 
         } catch (error) {
             console.error('registerAdmin error:', error);
@@ -172,25 +169,18 @@ const getAdmin = async (req, res) => {
         return res.status(400).json({success, errors: errors.array()});
     }
     try {
-        const {isAdmin} = req.body;
+        const {isAdmin, email} = req.body;
         if (!isAdmin) {
             return res.status(401).json({success, errors: [{msg: 'Not an Admin, authorization denied'}]});
         }
-        const {token} = req.body;
-        if (!token) {
-            return res.status(401).json({success, errors: [{msg: 'No token, authorization denied'}]});
+        if (!email) {
+            return res.status(401).json({success, errors: [{msg: 'Email is required'}]});
         }
 
-        const decoded = verifyToken(token);
-
-        if (!decoded) {
-            return res.status(401).json({success, errors: [{msg: 'Token is not valid'}]});
-        }
-        
-        let admin = await Admin.findOne({user:decoded.userId}).select('-password');
+        let admin = await Admin.findOne({email}).select('-password');
         
         if (!admin) {
-            return res.status(401).json({success, errors: [{msg: 'Token is not valid'}]});
+            return res.status(401).json({success, errors: [{msg: 'Admin not found'}]});
         }
 
         success = true;

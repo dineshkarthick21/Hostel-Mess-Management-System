@@ -46,6 +46,27 @@ export default function Index() {
       ),
     },
     {
+      text: "Food Menu",
+      url: "/student-dashboard/food-menu",
+      for: dashboard,
+      svg: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-6 h-6"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 6.042A8.967 8.967 0 006.175 4h.888a8.967 8.967 0 011.769-2.25m0 0A8.967 8.967 0 0112 2c2.3 0 4.469.746 6.175 2m0 0c.33-.132.661-.248 1-.248v4m0 0a8.966 8.966 0 01-6 2.375m0 0a8.966 8.966 0 01-6-2.375m0 0v4m0 0a8.966 8.966 0 001 4.125m0 0a8.987 8.987 0 006 2.375c2.3 0 4.469-.746 6.175-2m0 0v-4m0 4a8.987 8.987 0 001-4.125"
+          />
+        </svg>
+      ),
+    },
+    {
       text: "Attendance",
       url: "/student-dashboard/attendance",
       svg: (

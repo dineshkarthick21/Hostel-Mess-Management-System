@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { check } = require('express-validator');
-const { login, changePassword, verifySession, signupStudentLite, signupAdminLite } = require('../controllers/authController');
+const { login, changePassword, signupStudentLite, signupAdminLite } = require('../controllers/authController');
 
 // @route   POST api/auth/login
 // @desc    Authenticate user and get token
@@ -20,12 +20,7 @@ router.post('/change-password', [
     check('newPassword', 'New password of more than 8 character is required').isLength({ min: 8 })
 ], changePassword);
 
-// @route   POST api/auth/verifysession
-// @desc    Verify session
-// @access  public
-router.post('/verifysession', [
-    check('token', 'Token is required').not().isEmpty()
-], verifySession);
+
 
 // @route   POST api/auth/signup-student
 // @desc    Lightweight student signup
